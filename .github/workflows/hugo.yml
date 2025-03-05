@@ -83,27 +83,29 @@ jobs:
       
       - name: Create default config if not exists
         run: |
-          if [ ! -f hugo.toml ] && [ ! -f config.toml ]; then
-            echo "Creating default hugo.toml file"
-            echo "baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'" > hugo.toml
-            echo "languageCode = 'zh-cn'" >> hugo.toml
-            echo "title = '安悦咨询AI探索'" >> hugo.toml
-            echo "theme = 'hugo-theme-stack'" >> hugo.toml
-            echo "" >> hugo.toml
-            echo "[params]" >> hugo.toml
-            echo "  mainSections = ['post']" >> hugo.toml
-            echo "  featuredImageField = 'image'" >> hugo.toml
-            echo "  rssFullContent = true" >> hugo.toml
-            echo "  favicon = '/favicon.ico'" >> hugo.toml
-            echo "" >> hugo.toml
-            echo "  [params.footer]" >> hugo.toml
-            echo "    since = 2024" >> hugo.toml
-            echo "    customText = '安悦咨询AI探索'" >> hugo.toml
-            echo "" >> hugo.toml
-            echo "  [params.dateFormat]" >> hugo.toml
-            echo "    published = \"2006-01-02\"" >> hugo.toml
-            echo "    lastUpdated = \"2006-01-02\"" >> hugo.toml
-          fi
+          echo "Creating hugo.toml file"
+          echo "baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'" > hugo.toml
+          echo "languageCode = 'zh-cn'" >> hugo.toml
+          echo "title = '安悦咨询AI探索'" >> hugo.toml
+          echo "theme = 'hugo-theme-stack'" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "[params]" >> hugo.toml
+          echo "  mainSections = ['post']" >> hugo.toml
+          echo "  featuredImageField = 'image'" >> hugo.toml
+          echo "  rssFullContent = true" >> hugo.toml
+          echo "  favicon = '/favicon.ico'" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [params.footer]" >> hugo.toml
+          echo "    since = 2024" >> hugo.toml
+          echo "    customText = '安悦咨询AI探索'" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [params.dateFormat]" >> hugo.toml
+          echo "    published = \"2006-01-02\"" >> hugo.toml
+          echo "    lastUpdated = \"2006-01-02\"" >> hugo.toml
+          echo "Verifying hugo.toml exists:"
+          ls -la hugo.toml
+          echo "Content of hugo.toml:"
+          cat hugo.toml
       
       - name: Setup Pages
         id: pages
