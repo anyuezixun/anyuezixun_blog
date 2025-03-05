@@ -21,18 +21,19 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.101.0
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
+      
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.101.0'
+          extended: true
+      
       - name: Debug directory structure
         run: |
           echo "Current directory structure:"
@@ -41,10 +42,15 @@ jobs:
           ls -la themes/ || echo "Themes directory does not exist"
           echo ".gitmodules content:"
           cat .gitmodules || echo ".gitmodules does not exist"
+          echo "Hugo config file:"
+          ls -la hugo.toml || echo "hugo.toml does not exist"
+          ls -la config.toml || echo "config.toml does not exist"
+      
       - name: Setup Git Submodules manually
         run: |
           mkdir -p themes
           git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+      
       - name: Create custom template override
         run: |
           mkdir -p layouts/partials/head/opengraph/provider
@@ -91,18 +97,49 @@ jobs:
           {{ end }}
           {{ end }}
           EOF
+      
+      - name: Create default config if not exists
+        run: |
+          if [ ! -f hugo.toml ] && [ ! -f config.toml ]; then
+            echo "Creating default hugo.toml file"
+            cat > hugo.toml << 'EOF'
+            baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'
+            languageCode = 'zh-cn'
+            title = '安悦咨询AI探索'
+            theme = 'hugo-theme-stack'
+
+            [params]
+              mainSections = ['post']
+              featuredImageField = 'image'
+              rssFullContent = true
+              favicon = '/favicon.ico'
+
+              [params.footer]
+                since = 2024
+                customText = '安悦咨询AI探索'
+
+              [params.dateFormat]
+                published = "2006-01-02"
+                lastUpdated = "2006-01-02"
+            EOF
+          fi
+      
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
+      
       - name: Build with Hugo
         env:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
         run: |
+          hugo version
+          echo "Building with baseURL: ${{ steps.pages.outputs.base_url }}"
           hugo \
             --gc \
             --minify \
             --baseURL "${{ steps.pages.outputs.base_url }}"
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
