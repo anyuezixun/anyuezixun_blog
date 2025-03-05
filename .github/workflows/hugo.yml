@@ -31,12 +31,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: true
           fetch-depth: 0
-      - name: Setup Git Submodules
+      - name: Debug directory structure
         run: |
-          git submodule init
-          git submodule update --init --recursive
+          echo "Current directory structure:"
+          ls -la
+          echo "Themes directory:"
+          ls -la themes/ || echo "Themes directory does not exist"
+          echo ".gitmodules content:"
+          cat .gitmodules || echo ".gitmodules does not exist"
+      - name: Setup Git Submodules manually
+        run: |
+          mkdir -p themes
+          git clone https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
