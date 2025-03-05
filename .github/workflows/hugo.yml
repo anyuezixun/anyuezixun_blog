@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: true
+          submodules: recursive
           fetch-depth: 0
       
       - name: Setup Hugo
@@ -34,73 +34,31 @@ jobs:
           hugo-version: '0.101.0'
           extended: true
       
-      - name: Debug directory structure
+      - name: Debug directory structure before theme setup
         run: |
           echo "Current directory structure:"
           ls -la
-          echo "Themes directory:"
+          echo "Themes directory (before setup):"
           ls -la themes/ || echo "Themes directory does not exist"
           echo ".gitmodules content:"
           cat .gitmodules || echo ".gitmodules does not exist"
-          echo "Hugo config file:"
-          ls -la hugo.toml || echo "hugo.toml does not exist"
-          ls -la config.toml || echo "config.toml does not exist"
-      
-      - name: Initialize Hugo site
-        run: |
-          # 备份重要内容
-          mkdir -p /tmp/backup
-          if [ -d "content" ]; then
-            cp -r content /tmp/backup/ || echo "Failed to backup content"
-          fi
-          if [ -f "hugo.toml" ]; then
-            cp hugo.toml /tmp/backup/ || echo "Failed to backup hugo.toml"
-          fi
-          if [ -f "config.toml" ]; then
-            cp config.toml /tmp/backup/ || echo "Failed to backup config.toml"
-          fi
-          
-          # 删除现有的Hugo目录结构（包括themes）
-          rm -rf archetypes content data layouts static resources public themes
-          
-          # 使用Hugo初始化新站点
-          hugo new site . --force
-          
-          # 恢复备份的内容
-          if [ -d "/tmp/backup/content" ]; then
-            rm -rf content
-            cp -r /tmp/backup/content . || echo "Failed to restore content"
-          fi
-          
-          # 创建示例文章（如果不存在）
-          if [ ! -d "content/post" ]; then
-            mkdir -p content/post
-            cat > content/post/welcome.md << EOF
-          ---
-          title: "欢迎访问安悦咨询AI探索"
-          date: 2024-01-01
-          draft: false
-          ---
-          
-          欢迎访问安悦咨询AI探索博客！
-          
-          这是我们的第一篇文章。
-          EOF
-          fi
-          
-          # 显示创建的目录结构
-          echo "Hugo site initialized with structure:"
-          find . -maxdepth 2 -type d | sort
       
       - name: Setup Hugo Theme
         run: |
-          # 克隆主题
+          # 确保themes目录存在
           mkdir -p themes
+          
+          # 强制删除并重新克隆主题
+          echo "Removing existing theme directory if it exists..."
+          rm -rf themes/hugo-theme-stack
+          
+          echo "Cloning Hugo theme Stack..."
           git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
           
           # 验证主题安装
           echo "Theme directory structure:"
-          ls -la themes/hugo-theme-stack
+          ls -la themes/
+          ls -la themes/hugo-theme-stack || echo "Failed to clone theme"
       
       - name: Create custom template override
         run: |
@@ -132,11 +90,13 @@ jobs:
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
       
-      - name: Create Hugo config
+      - name: Verify Hugo config
         run: |
-          echo "Creating hugo.toml file"
-          cat > hugo.toml << EOF
-          baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'
+          # 确保hugo.toml存在
+          if [ ! -f "hugo.toml" ]; then
+            echo "Creating default hugo.toml file"
+            cat > hugo.toml << EOF
+          baseURL = 'https://anyuezixun.github.io/anyuezixun_blog/'
           languageCode = 'zh-cn'
           title = '安悦咨询AI探索'
           theme = 'hugo-theme-stack'
@@ -155,18 +115,21 @@ jobs:
               published = "2006-01-02"
               lastUpdated = "2006-01-02"
           EOF
+          else
+            echo "hugo.toml already exists"
+          fi
           
-          echo "Verifying hugo.toml exists:"
-          ls -la hugo.toml
           echo "Content of hugo.toml:"
           cat hugo.toml
       
       - name: Debug before Hugo build
         run: |
           echo "Complete directory structure before Hugo build:"
-          find . -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*/themes/*" | sort
+          find . -type f -not -path "*/\.*" | sort
+          echo "Themes directory content:"
+          find ./themes -type f | sort
           echo "Hugo environment:"
-          env | grep HUGO
+          hugo env
       
       - name: Setup Pages
         id: pages
@@ -182,7 +145,9 @@ jobs:
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}"
+            --baseURL "${{ steps.pages.outputs.base_url }}" \
+            --themesDir themes \
+            --verbose
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
