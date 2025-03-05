@@ -22,7 +22,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: 0.120.4
+      HUGO_VERSION: 0.111.3
     steps:
       - name: Install Hugo CLI
         run: |
@@ -45,6 +45,14 @@ jobs:
         run: |
           mkdir -p themes
           git clone https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+      - name: Patch theme templates if needed
+        run: |
+          if [ -f themes/hugo-theme-stack/layouts/partials/head/opengraph/provider/base.html ]; then
+            echo "Patching theme template..."
+            sed -i 's/\.Site\.Lastmod\.IsZero/\.Lastmod\.IsZero/g' themes/hugo-theme-stack/layouts/partials/head/opengraph/provider/base.html || echo "Patch failed"
+          else
+            echo "Template file not found, skipping patch"
+          fi
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
