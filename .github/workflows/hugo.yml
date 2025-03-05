@@ -54,74 +54,55 @@ jobs:
       - name: Create custom template override
         run: |
           mkdir -p layouts/partials/head/opengraph/provider
-          cat > layouts/partials/head/opengraph/provider/base.html << 'EOF'
-          <meta property="og:title" content="{{ .Title }}" />
-          <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />
-          <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
-          <meta property="og:url" content="{{ .Permalink }}" />
-          {{ with .Params.image }}
-          <meta property="og:image" content="{{ . | absURL }}" />
-          {{ else }}
-          {{ with .Site.Params.og.image }}
-          <meta property="og:image" content="{{ . | absURL }}" />
-          {{ end }}
-          {{ end }}
-
-          {{ if .IsPage }}
-          {{ if not .PublishDate.IsZero }}
-          <meta property="article:published_time" content="{{ .PublishDate.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />
-          {{ else if not .Date.IsZero }}
-          <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />
-          {{ end }}
-          {{ if not .Lastmod.IsZero }}
-          <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />
-          {{ end }}
-          {{ else }}
-          {{ if not .Date.IsZero }}
-          <meta property="og:updated_time" content="{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />
-          {{ end }}
-          {{ end }}
-
-          {{ with .Params.audio }}
-          <meta property="og:audio" content="{{ . }}" />
-          {{ end }}
-          {{ with .Params.locale }}
-          <meta property="og:locale" content="{{ . }}" />
-          {{ end }}
-          {{ with .Site.Params.title }}
-          <meta property="og:site_name" content="{{ . }}" />
-          {{ end }}
-          {{ with .Params.videos }}
-          {{ range . }}
-          <meta property="og:video" content="{{ . | absURL }}" />
-          {{ end }}
-          {{ end }}
-          EOF
+          echo '<meta property="og:title" content="{{ .Title }}" />' > layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ with .Site.Params.description }}{{ . }}{{ end }}{{ end }}{{ end }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:url" content="{{ .Permalink }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ with .Params.image }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:image" content="{{ . | absURL }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ else }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ with .Site.Params.og.image }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:image" content="{{ . | absURL }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ if .IsPage }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ if not .PublishDate.IsZero }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="article:published_time" content="{{ .PublishDate.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ else if not .Date.IsZero }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ if not .Lastmod.IsZero }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ else }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ if not .Date.IsZero }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '<meta property="og:updated_time" content="{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}" />' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
+          echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
       
       - name: Create default config if not exists
         run: |
           if [ ! -f hugo.toml ] && [ ! -f config.toml ]; then
             echo "Creating default hugo.toml file"
-            cat > hugo.toml << "EOFCONFIG"
-            baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'
-            languageCode = 'zh-cn'
-            title = '安悦咨询AI探索'
-            theme = 'hugo-theme-stack'
-
-            [params]
-              mainSections = ['post']
-              featuredImageField = 'image'
-              rssFullContent = true
-              favicon = '/favicon.ico'
-
-              [params.footer]
-                since = 2024
-                customText = '安悦咨询AI探索'
-
-              [params.dateFormat]
-                published = "2006-01-02"
-                lastUpdated = "2006-01-02"
-            EOFCONFIG
+            echo "baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'" > hugo.toml
+            echo "languageCode = 'zh-cn'" >> hugo.toml
+            echo "title = '安悦咨询AI探索'" >> hugo.toml
+            echo "theme = 'hugo-theme-stack'" >> hugo.toml
+            echo "" >> hugo.toml
+            echo "[params]" >> hugo.toml
+            echo "  mainSections = ['post']" >> hugo.toml
+            echo "  featuredImageField = 'image'" >> hugo.toml
+            echo "  rssFullContent = true" >> hugo.toml
+            echo "  favicon = '/favicon.ico'" >> hugo.toml
+            echo "" >> hugo.toml
+            echo "  [params.footer]" >> hugo.toml
+            echo "    since = 2024" >> hugo.toml
+            echo "    customText = '安悦咨询AI探索'" >> hugo.toml
+            echo "" >> hugo.toml
+            echo "  [params.dateFormat]" >> hugo.toml
+            echo "    published = \"2006-01-02\"" >> hugo.toml
+            echo "    lastUpdated = \"2006-01-02\"" >> hugo.toml
           fi
       
       - name: Setup Pages
