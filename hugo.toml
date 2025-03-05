@@ -1,0 +1,80 @@
+baseURL = 'https://anyuezixun.github.io/anyuezixun_blog/'
+languageCode = 'zh-cn'
+title = '安悦咨询AI探索'
+theme = 'hugo-theme-stack'
+
+[params]
+  mainSections = ['post']
+  featuredImageField = 'image'
+  rssFullContent = true
+  favicon = '/favicon.ico'
+
+  [params.footer]
+    since = 2024
+    customText = '安悦咨询AI探索'
+
+  [params.dateFormat]
+    published = "2006-01-02"
+    lastUpdated = "2006-01-02"
+
+  [params.sidebar]
+    emoji = "🚀"
+    subtitle = "探索AI技术前沿，助力企业数字化转型"
+
+  [params.sidebar.avatar]
+    enabled = false
+
+  # 添加社交媒体链接
+  [[params.social]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/anyuezixun"
+    params = { icon = "brand-github" }
+
+  [[params.social]]
+    identifier = "twitter"
+    name = "Twitter"
+    url = "https://twitter.com/anyuezixun"
+    params = { icon = "brand-twitter" }
+
+  [[params.social]]
+    identifier = "linkedin"
+    name = "LinkedIn"
+    url = "https://linkedin.com/company/anyuezixun"
+    params = { icon = "brand-linkedin" }
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "首页"
+    url = "/"
+    weight = -100
+    params = { icon = "home" }
+
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about"
+    weight = -90
+    params = { icon = "user" }
+
+  [[menu.main]]
+    identifier = "categories"
+    name = "分类"
+    url = "/categories"
+    weight = -85
+    params = { icon = "categories" }
+
+  [[menu.main]]
+    identifier = "tags"
+    name = "标签"
+    url = "/tags"
+    weight = -80
+    params = { icon = "tag" }
+
+  [[menu.main]]
+    identifier = "search"
+    name = "搜索"
+    url = "/search"
+    weight = -70
+    params = { icon = "search" }
