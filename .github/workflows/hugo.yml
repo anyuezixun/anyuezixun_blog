@@ -46,11 +46,6 @@ jobs:
           ls -la hugo.toml || echo "hugo.toml does not exist"
           ls -la config.toml || echo "config.toml does not exist"
       
-      - name: Setup Git Submodules manually
-        run: |
-          mkdir -p themes
-          git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
-      
       - name: Initialize Hugo site
         run: |
           # 备份重要内容
