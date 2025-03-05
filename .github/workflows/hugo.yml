@@ -51,6 +51,41 @@ jobs:
           mkdir -p themes
           git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
       
+      - name: Create Hugo site structure
+        run: |
+          # 创建必要的目录结构
+          mkdir -p content/post
+          mkdir -p static
+          mkdir -p layouts
+          mkdir -p archetypes
+          mkdir -p data
+          
+          # 创建示例文章
+          cat > content/post/welcome.md << EOF
+          ---
+          title: "欢迎访问安悦咨询AI探索"
+          date: 2024-01-01
+          draft: false
+          ---
+          
+          欢迎访问安悦咨询AI探索博客！
+          
+          这是我们的第一篇文章。
+          EOF
+          
+          # 创建默认模板
+          cat > archetypes/default.md << EOF
+          ---
+          title: "{{ replace .Name "-" " " | title }}"
+          date: {{ .Date }}
+          draft: true
+          ---
+          EOF
+          
+          # 显示创建的目录结构
+          echo "Created Hugo site structure:"
+          find . -type d -not -path "*/\.*" -not -path "*/node_modules/*" | sort
+      
       - name: Create custom template override
         run: |
           mkdir -p layouts/partials/head/opengraph/provider
@@ -106,6 +141,13 @@ jobs:
           ls -la hugo.toml
           echo "Content of hugo.toml:"
           cat hugo.toml
+      
+      - name: Debug before Hugo build
+        run: |
+          echo "Complete directory structure before Hugo build:"
+          find . -type f -not -path "*/\.*" -not -path "*/node_modules/*" -not -path "*/themes/*" | sort
+          echo "Hugo environment:"
+          env | grep HUGO
       
       - name: Setup Pages
         id: pages
