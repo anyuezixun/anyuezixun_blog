@@ -51,17 +51,24 @@ jobs:
           mkdir -p themes
           git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
       
-      - name: Create Hugo site structure
+      - name: Initialize Hugo site
         run: |
-          # 创建必要的目录结构
-          mkdir -p content/post
-          mkdir -p static
-          mkdir -p layouts
-          mkdir -p archetypes
-          mkdir -p data
+          # 保存当前内容
+          mkdir -p /tmp/content-backup
+          cp -r content /tmp/content-backup/ || echo "No content directory to backup"
           
-          # 创建示例文章
-          cat > content/post/welcome.md << EOF
+          # 使用Hugo初始化新站点
+          hugo new site . --force
+          
+          # 恢复内容
+          if [ -d "/tmp/content-backup/content" ]; then
+            cp -r /tmp/content-backup/content/* content/ || echo "No content to restore"
+          fi
+          
+          # 创建示例文章（如果不存在）
+          if [ ! -f "content/post/welcome.md" ]; then
+            mkdir -p content/post
+            cat > content/post/welcome.md << EOF
           ---
           title: "欢迎访问安悦咨询AI探索"
           date: 2024-01-01
@@ -72,18 +79,10 @@ jobs:
           
           这是我们的第一篇文章。
           EOF
-          
-          # 创建默认模板
-          cat > archetypes/default.md << EOF
-          ---
-          title: "{{ replace .Name "-" " " | title }}"
-          date: {{ .Date }}
-          draft: true
-          ---
-          EOF
+          fi
           
           # 显示创建的目录结构
-          echo "Created Hugo site structure:"
+          echo "Hugo site initialized with structure:"
           find . -type d -not -path "*/\.*" -not -path "*/node_modules/*" | sort
       
       - name: Create custom template override
@@ -116,27 +115,30 @@ jobs:
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
       
-      - name: Create default config if not exists
+      - name: Create Hugo config
         run: |
           echo "Creating hugo.toml file"
-          echo "baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'" > hugo.toml
-          echo "languageCode = 'zh-cn'" >> hugo.toml
-          echo "title = '安悦咨询AI探索'" >> hugo.toml
-          echo "theme = 'hugo-theme-stack'" >> hugo.toml
-          echo "" >> hugo.toml
-          echo "[params]" >> hugo.toml
-          echo "  mainSections = ['post']" >> hugo.toml
-          echo "  featuredImageField = 'image'" >> hugo.toml
-          echo "  rssFullContent = true" >> hugo.toml
-          echo "  favicon = '/favicon.ico'" >> hugo.toml
-          echo "" >> hugo.toml
-          echo "  [params.footer]" >> hugo.toml
-          echo "    since = 2024" >> hugo.toml
-          echo "    customText = '安悦咨询AI探索'" >> hugo.toml
-          echo "" >> hugo.toml
-          echo "  [params.dateFormat]" >> hugo.toml
-          echo "    published = \"2006-01-02\"" >> hugo.toml
-          echo "    lastUpdated = \"2006-01-02\"" >> hugo.toml
+          cat > hugo.toml << EOF
+          baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'
+          languageCode = 'zh-cn'
+          title = '安悦咨询AI探索'
+          theme = 'hugo-theme-stack'
+          
+          [params]
+            mainSections = ['post']
+            featuredImageField = 'image'
+            rssFullContent = true
+            favicon = '/favicon.ico'
+          
+            [params.footer]
+              since = 2024
+              customText = '安悦咨询AI探索'
+          
+            [params.dateFormat]
+              published = "2006-01-02"
+              lastUpdated = "2006-01-02"
+          EOF
+          
           echo "Verifying hugo.toml exists:"
           ls -la hugo.toml
           echo "Content of hugo.toml:"
