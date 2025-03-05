@@ -42,6 +42,8 @@ jobs:
           ls -la themes/ || echo "Themes directory does not exist"
           echo ".gitmodules content:"
           cat .gitmodules || echo ".gitmodules does not exist"
+          echo "Config files:"
+          find . -name "*.toml" -o -name "*.yaml" -o -name "*.yml" | grep -v "\.github"
       
       - name: Setup Hugo Theme
         run: |
@@ -90,37 +92,42 @@ jobs:
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
           echo '{{ end }}' >> layouts/partials/head/opengraph/provider/base.html
       
-      - name: Verify Hugo config
+      - name: Create Hugo config
         run: |
-          # 确保hugo.toml存在
-          if [ ! -f "hugo.toml" ]; then
-            echo "Creating default hugo.toml file"
-            cat > hugo.toml << EOF
-          baseURL = 'https://anyuezixun.github.io/anyuezixun_blog/'
-          languageCode = 'zh-cn'
-          title = '安悦咨询AI探索'
-          theme = 'hugo-theme-stack'
-          
-          [params]
-            mainSections = ['post']
-            featuredImageField = 'image'
-            rssFullContent = true
-            favicon = '/favicon.ico'
-          
-            [params.footer]
-              since = 2024
-              customText = '安悦咨询AI探索'
-          
-            [params.dateFormat]
-              published = "2006-01-02"
-              lastUpdated = "2006-01-02"
-          EOF
-          else
-            echo "hugo.toml already exists"
-          fi
+          # 强制创建新的hugo.toml文件
+          echo "Creating hugo.toml file"
+          echo 'baseURL = "https://anyuezixun.github.io/anyuezixun_blog.github.io/"' > hugo.toml
+          echo 'languageCode = "zh-cn"' >> hugo.toml
+          echo 'title = "安悦咨询AI探索"' >> hugo.toml
+          echo 'theme = "hugo-theme-stack"' >> hugo.toml
+          echo '' >> hugo.toml
+          echo '[params]' >> hugo.toml
+          echo '  mainSections = ["post"]' >> hugo.toml
+          echo '  featuredImageField = "image"' >> hugo.toml
+          echo '  rssFullContent = true' >> hugo.toml
+          echo '  favicon = "/favicon.ico"' >> hugo.toml
+          echo '' >> hugo.toml
+          echo '  [params.footer]' >> hugo.toml
+          echo '    since = 2024' >> hugo.toml
+          echo '    customText = "安悦咨询AI探索"' >> hugo.toml
+          echo '' >> hugo.toml
+          echo '  [params.dateFormat]' >> hugo.toml
+          echo '    published = "2006-01-02"' >> hugo.toml
+          echo '    lastUpdated = "2006-01-02"' >> hugo.toml
+          echo '' >> hugo.toml
+          echo '  [params.sidebar]' >> hugo.toml
+          echo '    emoji = "🚀"' >> hugo.toml
+          echo '    subtitle = "探索AI技术前沿，助力企业数字化转型"' >> hugo.toml
+          echo '' >> hugo.toml
+          echo '  [params.sidebar.avatar]' >> hugo.toml
+          echo '    enabled = false' >> hugo.toml
           
           echo "Content of hugo.toml:"
           cat hugo.toml
+          
+          # 创建config.toml作为备份
+          cp hugo.toml config.toml
+          echo "Created config.toml as backup"
       
       - name: Debug before Hugo build
         run: |
@@ -130,6 +137,8 @@ jobs:
           find ./themes -type f | sort
           echo "Hugo environment:"
           hugo env
+          echo "Working directory:"
+          pwd
       
       - name: Setup Pages
         id: pages
