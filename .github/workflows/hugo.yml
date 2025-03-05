@@ -53,20 +53,32 @@ jobs:
       
       - name: Initialize Hugo site
         run: |
-          # 保存当前内容
-          mkdir -p /tmp/content-backup
-          cp -r content /tmp/content-backup/ || echo "No content directory to backup"
+          # 备份重要内容
+          mkdir -p /tmp/backup
+          if [ -d "content" ]; then
+            cp -r content /tmp/backup/ || echo "Failed to backup content"
+          fi
+          if [ -f "hugo.toml" ]; then
+            cp hugo.toml /tmp/backup/ || echo "Failed to backup hugo.toml"
+          fi
+          if [ -f "config.toml" ]; then
+            cp config.toml /tmp/backup/ || echo "Failed to backup config.toml"
+          fi
+          
+          # 删除现有的Hugo目录结构
+          rm -rf archetypes content data layouts static resources public
           
           # 使用Hugo初始化新站点
           hugo new site . --force
           
-          # 恢复内容
-          if [ -d "/tmp/content-backup/content" ]; then
-            cp -r /tmp/content-backup/content/* content/ || echo "No content to restore"
+          # 恢复备份的内容
+          if [ -d "/tmp/backup/content" ]; then
+            rm -rf content
+            cp -r /tmp/backup/content . || echo "Failed to restore content"
           fi
           
           # 创建示例文章（如果不存在）
-          if [ ! -f "content/post/welcome.md" ]; then
+          if [ ! -d "content/post" ]; then
             mkdir -p content/post
             cat > content/post/welcome.md << EOF
           ---
@@ -83,7 +95,7 @@ jobs:
           
           # 显示创建的目录结构
           echo "Hugo site initialized with structure:"
-          find . -type d -not -path "*/\.*" -not -path "*/node_modules/*" | sort
+          find . -maxdepth 2 -type d | sort
       
       - name: Create custom template override
         run: |
