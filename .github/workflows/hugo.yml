@@ -65,8 +65,8 @@ jobs:
             cp config.toml /tmp/backup/ || echo "Failed to backup config.toml"
           fi
           
-          # 删除现有的Hugo目录结构
-          rm -rf archetypes content data layouts static resources public
+          # 删除现有的Hugo目录结构（包括themes）
+          rm -rf archetypes content data layouts static resources public themes
           
           # 使用Hugo初始化新站点
           hugo new site . --force
@@ -96,6 +96,16 @@ jobs:
           # 显示创建的目录结构
           echo "Hugo site initialized with structure:"
           find . -maxdepth 2 -type d | sort
+      
+      - name: Setup Hugo Theme
+        run: |
+          # 克隆主题
+          mkdir -p themes
+          git clone --branch v3.16.0 https://github.com/CaiJimmy/hugo-theme-stack.git themes/hugo-theme-stack
+          
+          # 验证主题安装
+          echo "Theme directory structure:"
+          ls -la themes/hugo-theme-stack
       
       - name: Create custom template override
         run: |
