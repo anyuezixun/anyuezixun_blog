@@ -102,7 +102,7 @@ jobs:
         run: |
           if [ ! -f hugo.toml ] && [ ! -f config.toml ]; then
             echo "Creating default hugo.toml file"
-            cat > hugo.toml << 'EOF'
+            cat > hugo.toml << "EOFCONFIG"
             baseURL = 'https://anyuezixun.github.io/anyuezixun_blog.github.io/'
             languageCode = 'zh-cn'
             title = '安悦咨询AI探索'
@@ -121,7 +121,7 @@ jobs:
               [params.dateFormat]
                 published = "2006-01-02"
                 lastUpdated = "2006-01-02"
-            EOF
+            EOFCONFIG
           fi
       
       - name: Setup Pages
