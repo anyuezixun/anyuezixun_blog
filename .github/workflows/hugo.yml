@@ -98,9 +98,13 @@ jobs:
           REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           echo "Repository name: $REPO_NAME"
           
+          # 设置固定的baseURL
+          FIXED_BASE_URL="https://anyuezixun.github.io/$REPO_NAME/"
+          echo "Using fixed baseURL: $FIXED_BASE_URL"
+          
           # 强制创建新的hugo.toml文件
           echo "Creating hugo.toml file"
-          echo "baseURL = \"https://anyuezixun.github.io/$REPO_NAME/\"" > hugo.toml
+          echo "baseURL = \"$FIXED_BASE_URL\"" > hugo.toml
           echo "languageCode = \"zh-cn\"" >> hugo.toml
           echo "title = \"安悦咨询AI探索\"" >> hugo.toml
           echo "theme = \"hugo-theme-stack\"" >> hugo.toml
@@ -125,6 +129,61 @@ jobs:
           echo "" >> hugo.toml
           echo "  [params.sidebar.avatar]" >> hugo.toml
           echo "    enabled = false" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  # 添加社交媒体链接" >> hugo.toml
+          echo "  [[params.social]]" >> hugo.toml
+          echo "    identifier = \"github\"" >> hugo.toml
+          echo "    name = \"GitHub\"" >> hugo.toml
+          echo "    url = \"https://github.com/anyuezixun\"" >> hugo.toml
+          echo "    params = { icon = \"brand-github\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[params.social]]" >> hugo.toml
+          echo "    identifier = \"twitter\"" >> hugo.toml
+          echo "    name = \"Twitter\"" >> hugo.toml
+          echo "    url = \"https://twitter.com/anyuezixun\"" >> hugo.toml
+          echo "    params = { icon = \"brand-twitter\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[params.social]]" >> hugo.toml
+          echo "    identifier = \"linkedin\"" >> hugo.toml
+          echo "    name = \"LinkedIn\"" >> hugo.toml
+          echo "    url = \"https://linkedin.com/company/anyuezixun\"" >> hugo.toml
+          echo "    params = { icon = \"brand-linkedin\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "[menu]" >> hugo.toml
+          echo "  [[menu.main]]" >> hugo.toml
+          echo "    identifier = \"home\"" >> hugo.toml
+          echo "    name = \"首页\"" >> hugo.toml
+          echo "    url = \"/\"" >> hugo.toml
+          echo "    weight = -100" >> hugo.toml
+          echo "    params = { icon = \"home\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[menu.main]]" >> hugo.toml
+          echo "    identifier = \"about\"" >> hugo.toml
+          echo "    name = \"关于\"" >> hugo.toml
+          echo "    url = \"/about\"" >> hugo.toml
+          echo "    weight = -90" >> hugo.toml
+          echo "    params = { icon = \"user\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[menu.main]]" >> hugo.toml
+          echo "    identifier = \"categories\"" >> hugo.toml
+          echo "    name = \"分类\"" >> hugo.toml
+          echo "    url = \"/categories\"" >> hugo.toml
+          echo "    weight = -85" >> hugo.toml
+          echo "    params = { icon = \"categories\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[menu.main]]" >> hugo.toml
+          echo "    identifier = \"tags\"" >> hugo.toml
+          echo "    name = \"标签\"" >> hugo.toml
+          echo "    url = \"/tags\"" >> hugo.toml
+          echo "    weight = -80" >> hugo.toml
+          echo "    params = { icon = \"tag\" }" >> hugo.toml
+          echo "" >> hugo.toml
+          echo "  [[menu.main]]" >> hugo.toml
+          echo "    identifier = \"search\"" >> hugo.toml
+          echo "    name = \"搜索\"" >> hugo.toml
+          echo "    url = \"/search\"" >> hugo.toml
+          echo "    weight = -70" >> hugo.toml
+          echo "    params = { icon = \"search\" }" >> hugo.toml
           
           echo "Content of hugo.toml:"
           cat hugo.toml
@@ -156,11 +215,14 @@ jobs:
           HUGO_ENV: production
         run: |
           hugo version
-          echo "Building with baseURL: ${{ steps.pages.outputs.base_url }}"
+          # 获取仓库名称
+          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          FIXED_BASE_URL="https://anyuezixun.github.io/$REPO_NAME/"
+          echo "Building with fixed baseURL: $FIXED_BASE_URL"
           hugo \
             --gc \
             --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}" \
+            --baseURL "$FIXED_BASE_URL" \
             --themesDir themes \
             --verbose
       
