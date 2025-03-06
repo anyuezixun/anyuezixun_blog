@@ -8,6 +8,12 @@ theme = 'hugo-theme-stack'
   featuredImageField = 'image'
   rssFullContent = true
   favicon = '/favicon.ico'
+  
+  # 设置网站品牌
+  [params.brand]
+    title = "安悦咨询"
+    description = "AI探索"
+    image = "img/logo.svg"  # 使用SVG格式的logo
 
   [params.footer]
     since = 2024
@@ -22,7 +28,9 @@ theme = 'hugo-theme-stack'
     subtitle = "探索AI技术前沿，助力企业数字化转型"
 
   [params.sidebar.avatar]
-    enabled = false
+    enabled = true
+    local = true
+    src = "img/logo.svg"  # 使用SVG格式的logo
 
   # 添加社交媒体链接
   [[params.social]]

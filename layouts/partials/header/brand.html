@@ -1,0 +1,35 @@
+{{ $title := .Site.Title }}
+{{ $brand := .Site.Params.brand }}
+
+<a href="{{ absLangURL "/" }}" class="site-brand">
+    {{ if $brand }}
+        {{ if $brand.image }}
+            {{ $image := resources.Get $brand.image }}
+            {{ if $image }}
+                {{ if eq $image.MediaType.SubType "svg" }}
+                    <img src="{{ $image.RelPermalink }}" alt="{{ $title }}" class="brand-image">
+                {{ else }}
+                    {{ $imageResized := $image.Resize "300x" }}
+                    <img src="{{ $imageResized.RelPermalink }}" alt="{{ $title }}" class="brand-image">
+                {{ end }}
+            {{ else }}
+                {{ errorf "Failed to get brand image from %q" $brand.image }}
+            {{ end }}
+        {{ else }}
+            <div class="brand-text">
+                {{ if $brand.title }}
+                    <div class="brand-title">{{ $brand.title }}</div>
+                {{ else }}
+                    <div class="brand-title">{{ $title }}</div>
+                {{ end }}
+                {{ with $brand.description }}
+                    <div class="brand-description">{{ . }}</div>
+                {{ end }}
+            </div>
+        {{ end }}
+    {{ else }}
+        <div class="brand-text">
+            <div class="brand-title">{{ $title }}</div>
+        </div>
+    {{ end }}
+</a> 
