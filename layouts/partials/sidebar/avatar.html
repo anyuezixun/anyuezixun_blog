@@ -3,12 +3,7 @@
         {{ if .Site.Params.sidebar.avatar.local }}
             {{ $avatar := resources.Get .Site.Params.sidebar.avatar.src }}
             {{ if $avatar }}
-                {{ if eq $avatar.MediaType.SubType "svg" }}
-                    <img src="{{ $avatar.RelPermalink }}" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
-                {{ else }}
-                    {{ $avatarResized := $avatar.Resize "300x" }}
-                    <img src="{{ $avatarResized.RelPermalink }}" width="{{ $avatarResized.Width }}" height="{{ $avatarResized.Height }}" class="site-logo" loading="lazy" alt="Avatar">
-                {{ end }}
+                <img src="{{ $avatar.RelPermalink }}" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
             {{ else }}
                 {{ errorf "Failed to get avatar from %q" .Site.Params.sidebar.avatar.src }}
             {{ end }}
