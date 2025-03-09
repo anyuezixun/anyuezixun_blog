@@ -1,7 +1,7 @@
 ---
 title: "人工智能伦理：技术发展与道德边界"
 description: "探讨AI技术发展中的伦理挑战、监管框架和企业责任"
-date: 2024-03-06
+date: 2025-03-06
 categories: ["AI伦理"]
 tags: ["人工智能", "伦理道德", "技术监管", "社会责任"]
 image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485"

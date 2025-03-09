@@ -1,7 +1,7 @@
 ---
 title: "AI前沿资讯：最新人工智能研究与突破"
 description: "探索人工智能领域的最新研究成果、技术突破和行业动态"
-date: 2024-03-06T10:00:00+08:00
+date: 2025-03-06T10:00:00+08:00
 image: "https://source.unsplash.com/random?ai,news,technology"
 categories:
   - AI前沿资讯

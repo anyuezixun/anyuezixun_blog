@@ -1,7 +1,7 @@
 ---
 title: "人工智能在各行业的创新应用"
 description: "探索AI技术如何在金融、医疗、制造和零售等行业带来革命性变革"
-date: 2024-03-05
+date: 2025-03-05
 categories: ["AI应用"]
 tags: ["人工智能", "行业应用", "创新案例", "技术趋势"]
 image: "https://images.unsplash.com/photo-1677442135068-cbc7ee6d0dbd"

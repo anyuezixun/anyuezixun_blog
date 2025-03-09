@@ -107,6 +107,8 @@ jobs:
           echo "baseURL = \"$FIXED_BASE_URL\"" > hugo.toml
           echo "languageCode = \"zh-cn\"" >> hugo.toml
           echo "title = \"安悦咨询AI探索\"" >> hugo.toml
+          echo "description = \"AI探索\"" >> hugo.toml
+          echo "image = \"img/logo.png\"" >> hugo.toml
           echo "theme = \"hugo-theme-stack\"" >> hugo.toml
           echo "" >> hugo.toml
           echo "[params]" >> hugo.toml
@@ -116,7 +118,7 @@ jobs:
           echo "  favicon = \"/favicon.ico\"" >> hugo.toml
           echo "" >> hugo.toml
           echo "  [params.footer]" >> hugo.toml
-          echo "    since = 2024" >> hugo.toml
+          echo "    since = 2025" >> hugo.toml
           echo "    customText = \"安悦咨询AI探索\"" >> hugo.toml
           echo "" >> hugo.toml
           echo "  [params.dateFormat]" >> hugo.toml
