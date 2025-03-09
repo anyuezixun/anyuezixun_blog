@@ -1,7 +1,7 @@
 ---
 title: "AI驱动的企业数字化转型：趋势与实践"
 description: "探讨人工智能如何推动企业数字化转型，以及成功实施的关键策略"
-date: 2024-03-03
+date: 2025-03-03
 categories: ["数字化"]
 tags: ["人工智能", "数字化转型", "企业转型", "技术创新"]
 image: "https://images.unsplash.com/photo-1677442135136-760c813a6e11"
